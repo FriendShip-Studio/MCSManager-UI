@@ -21,46 +21,24 @@
   ></div>
 
   <div id="register-panel-wrapper" :class="{ 'register-panel-wrapper-out': closeWindow }">
-    <Panel id="register-panel" body-style="padding:44px;" v-loading="loading">
+    <Panel id="register-panel" body-style="padding: 44px;" v-loading="loading">
       <template #default>
-        <form action="/register" method="post">
-          <div style="font-size: 24px; font-weight: 600">{{ $t('register.title') }}</div>
-          <p>{{ $t('register.titleInfo') }}</p>
-          <form action="/" method="post">
+        <div id="register-wrapper">
+          <div id="image-wrapper">
+            <el-image style="width: 200px;"
+                      src="https://cdn.friendship.org.cn/LightPicture/2022/10/a51bb07f4a48dd1d.gif" :fit="fit"/>
+          </div>
+          <div id="form-wrapper">
+            <div id="register-title">{{ $t('register.title') }}</div>
+            <div id="register-info">{{ $t('register.info') }}</div>
+            <div id="register-notice">
+              {{ $t('register.notice-start') }}
+              <el-tag size="small">{{ userInfo.userName }}</el-tag>
+              {{ $t('register.notice-end') }}
+            </div>
             <div style="margin-top: 22px">
-              <div>
-                <el-input
-                  type="text"
-                  name="mcsm_username"
-                  v-model="form.username"
-                  :placeholder="$t('register.account')"
-                  autocomplete="on"
-                  :disabled="close"
-                  @keyup.enter="submit"
-                >
-                  <template #suffix>
-                    <i class="el-icon-user"></i>
-                  </template>
-                </el-input>
-              </div>
-              <div class="row-mt">
-                <el-input
-                  type="password"
-                  name="mcsm_password"
-                  v-model="form.password"
-                  :placeholder="$t('register.passWord')"
-                  autocomplete="on"
-                  :disabled="close"
-                  @keyup.enter="submit"
-                >
-                  <template #suffix>
-                    <i class="el-icon-lock"></i>
-                  </template>
-                </el-input>
-              </div>
               <div class="register-btn-wrapper row-mt">
-                <transition name="fade">
-                </transition>
+                <el-link type="primary" @click="handleReturn">{{ $t('register.return') }}</el-link>
                 <el-button
                   type="primary"
                   size="small"
@@ -69,7 +47,7 @@
                   :disabled="close"
                   :loading="loading"
                 >
-                  {{ registerText }}
+                  {{ $t('register.continue') }}
                 </el-button>
               </div>
               <div class="register-info-wrapper row-mt" v-if="registerInfo">
@@ -81,13 +59,13 @@
                 <div>
                   <span class="color-gray"
                   >Powered by
-                    <a target="black" href="https://github.com/MCSManager">MCSManager</a></span
+                    <a target="black" href="https://cloud.friendship.org.cn/">Friendship Cloud</a></span
                   >
                 </div>
               </div>
             </div>
-          </form>
-        </form>
+          </div>
+        </div>
       </template>
     </Panel>
   </div>
@@ -117,6 +95,7 @@
 
 <script>
   import Panel from '../../components/Panel';
+  import { sleep } from '@/app/service/common.js';
   // eslint-disable-next-line no-unused-vars
   // import router from "../router";
 
@@ -125,19 +104,26 @@
     components: {Panel},
     data: function () {
       return {
-        form: {
-          username: '',
-          password: ''
-        },
         close: false,
         closeWindow: false,
-        registerText: this.$t('register.register'),
         loading: false,
         cause: '',
         registerInfo: ''
       };
     },
-    methods: {},
+    computed: {
+      userInfo() {
+        return this.$store.state.userInfo;
+      }
+    },
+    methods: {
+      async handleReturn() {
+        this.close = true;
+        this.closeWindow = true;
+        await sleep(1500);
+        this.$router.back();
+      }
+    },
     async mounted() {
       console.log('Welcome use MCSManager.');
       console.log('Copyright 2022 MCSManager All rights reserved.');
@@ -272,7 +258,7 @@
 
   #register-panel {
     min-height: 330px;
-    width: 430px;
+    width: 720px;
     transition: all 0.4s 0.2s;
   }
 
@@ -284,7 +270,7 @@
 
   .register-btn-wrapper {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -300,15 +286,27 @@
     text-decoration: underline;
   }
 
-  #register-cause {
-    color: rgb(170, 8, 8);
-    font-size: 12px;
-    margin-right: 18px;
+  #register-wrapper {
+    display: flex;
   }
 
-  .fgp {
-    font-size: 12px;
-    margin-right: 18px;
+  #form-wrapper {
+    font-size: 16px;
+  }
+
+  #form-wrapper > * {
+    margin-bottom: 24px;
+  }
+
+  #register-title {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  #image-wrapper {
+    display: grid;
+    place-items: center;
+    margin-right: 44px;
   }
 
   @media (max-width: 900px) {
@@ -329,6 +327,15 @@
       border: none;
     }
 
+    #register-wrapper {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #image-wrapper {
+      margin-right: 0;
+    }
+
     .register-btn-wrapper {
       display: flex;
       justify-content: flex-start;
@@ -337,9 +344,8 @@
       text-align: center;
     }
 
-    #register-cause {
-      margin-top: 12px;
-      margin-right: 0;
+    .register-btn-wrapper > * {
+      margin-bottom: 8px;
     }
 
     .register-info-wrapper {
@@ -349,4 +355,5 @@
       align-items: center;
     }
   }
+
 </style>

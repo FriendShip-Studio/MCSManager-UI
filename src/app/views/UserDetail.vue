@@ -169,7 +169,7 @@
               {{ $t('userDetail.webAuthnIs') }}
             </p>
           </div>
-          <ul
+          <div
             class="row-mt"
             style="
               padding: 12px 8px;
@@ -179,9 +179,9 @@
               font-size: 13px;
             "
           >
-            <div>{{ $t('userDetail.regWebAuthn') }}</div>
-            <div>{{ $t('userDetail.resetWebAuthn') }}</div>
-          </ul>
+            <div>- {{ $t('userDetail.regWebAuthn') }}</div>
+            <div>- {{ $t('userDetail.resetWebAuthn') }}</div>
+          </div>
           <div style="text-align: right">
             <ItemGroup>
               <el-button size="small" type="primary" plain class="row-mt" @click="handleReg">{{
@@ -193,6 +193,18 @@
                 }}
               </el-button>
             </ItemGroup>
+          </div>
+          <div
+            style="
+                padding: 12px 8px;
+                background: rgba(255, 0, 0, 0.1);
+                box-sizing: border-box;
+                border-radius: 2px;
+                font-size: 13px;
+                color: red;
+            "
+          >
+            *{{ $t('userDetail.webAuthnClaim') }}
           </div>
         </template>
       </Panel>

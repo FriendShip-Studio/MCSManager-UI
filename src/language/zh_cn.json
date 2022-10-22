@@ -57,6 +57,14 @@
       "message": "无法获取身份数据，可能是您已被封禁，或者网络问题，请尝试刷新页面"
     }
   },
+  "register": {
+    "title": "使用Friendship Auth登入",
+    "info": "通过使用Friendship Auth登入，您可以安全地从无密码可信凭据访问Friendship Cloud服务",
+    "notice-start": "如果您希望以",
+    "notice-end": "的身份注册，请继续，我们将为您注册Friendship Auth",
+    "continue": "继续",
+    "return": "返回上一个页面"
+  },
   "overview": {
     "systemInfoTable": "系统信息总览",
     "daemonStatus": "节点在线状态",
@@ -655,16 +663,16 @@
     "inputPasswd": "请输入密码值，若不输入则不进行密码修改",
     "notStandard": "密码长度不规范，必须长度在 9 位到 36 位之间",
     "notSame": "两次密码不一致",
-    "webAuthn":"Friendship Auth",
-    "whatIsWebAuthn":"什么是 Friendship Auth？",
-    "webAuthnIs":"通过基于 WebAuthn 技术的 Friendship Auth 无密码认证技术，您可以安全地快速登入 Friendship 控制中心",
-    "regWebAuthn":"若要使用 Friendship Auth，您必须为此设备注册",
-    "regWebAuthnBtn":"注册新设备",
-    "resetWebAuthn":"如果您不再使用 Friendship Auth 服务或您认为您的设备认证已不可靠，请重置您的设备认证",
-    "resetWebAuthnBtn":"抹除设备认证",
+    "webAuthn": "Friendship Auth",
+    "whatIsWebAuthn": "什么是 Friendship Auth？",
+    "webAuthnIs": "通过基于 WebAuthn 技术的 Friendship Auth 无密码认证技术，您可以安全地快速登入 Friendship 控制中心",
+    "regWebAuthn": "若要使用 Friendship Auth，您必须为此设备注册",
+    "regWebAuthnBtn": "注册新设备",
+    "resetWebAuthn": "如果您不再使用 Friendship Auth 服务或您认为您的设备认证已不可靠，请重置您的设备认证",
+    "resetWebAuthnBtn": "抹除设备认证",
     "webAuthnClaim": "请仅为您的常用设备注册 Friendship Auth，为公共设备注册或泄露凭据可能导致账户丢失",
-    "confirmResetWebAuthn":"您确定要抹除您的设备认证吗？",
-    "resetWebAuthnSuccess":"您的设备认证已抹除"
+    "confirmResetWebAuthn": "您确定要抹除您的设备认证吗？",
+    "resetWebAuthnSuccess": "您的设备认证已抹除"
   },
   "services": {
     "remoteDaemonManage": "新增节点",

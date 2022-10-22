@@ -30,6 +30,10 @@ export const API_USER_LOGOUT = `${API_URL}/api/auth/logout`;
 export const API_USER_DELETE = `${API_URL}/api/auth/delete`;
 export const API_USER_UPDATE = `${API_URL}/api/auth/update`;
 
+export const API_USER_WEBAUTHN_REGISTER = `${API_URL}/api/auth/webauthn/register`;
+export const API_USER_WEBAUTHN_LOGIN = `${API_URL}/api/auth/webauthn/login`;
+export const API_USER_WEBAUTHN_RESET = `${API_URL}/api/auth/webauthn/reset`;
+
 export const API_USER_API = `${API_URL}/api/auth/api`;
 
 export const API_OVERVIEW = `${API_URL}/api/overview`;

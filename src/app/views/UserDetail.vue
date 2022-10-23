@@ -76,36 +76,18 @@
       <Panel style="height: 350px">
         <template #title>{{ $t('userDetail.updatePasswd') }}</template>
         <template #default>
-          <el-form
-            :model="userData"
-            :rules="rules"
-            label-position="top"
-            size="small"
-            ref="ruleFormRef"
-          >
+          <el-form :model="userData" :rules="rules" label-position="top" size="small" ref="ruleFormRef">
             <el-form-item :label="$t('userDetail.newPasswd')" prop="passWord" required>
-              <el-input
-                size="small"
-                type="password"
-                v-model="userData.passWord"
-                autocomplete="off"
-                :readonly="readonly.b"
-                :placeholder="$t('userDetail.newPasswdInfo')"
-                @focus="() => (readonly.b = false)"
-              >
+              <el-input size="small" type="password" v-model="userData.passWord" autocomplete="off"
+                :readonly="readonly.b" :placeholder="$t('userDetail.newPasswdInfo')"
+                @focus="() => (readonly.b = false)">
               </el-input>
             </el-form-item>
 
             <el-form-item :label="$t('userDetail.confirmNewPasswd')" prop="passWord2" required>
-              <el-input
-                size="small"
-                type="password"
-                v-model="userData.passWord2"
-                :placeholder="$t('userDetail.keepOrigin')"
-                :readonly="readonly.c"
-                @focus="() => (readonly.c = false)"
-                autocomplete="off"
-              >
+              <el-input size="small" type="password" v-model="userData.passWord2"
+                :placeholder="$t('userDetail.keepOrigin')" :readonly="readonly.c" @focus="() => (readonly.c = false)"
+                autocomplete="off">
               </el-input>
             </el-form-item>
             <div style="text-align: right">
@@ -130,27 +112,23 @@
               {{ $t('userDetail.apiKeyIs') }}
             </p>
           </div>
-          <div
-            class="row-mt"
-            style="
-              padding: 12px 8px;
+          <div class="row-mt" style="padding: 12px 8px;
               background: rgba(0, 0, 0, 0.02);
               box-sizing: border-box;
               border-radius: 2px;
               font-size: 13px;
-            "
-          >
+            ">
             <span>{{ userInfo.apiKey ? userInfo.apiKey : $t('userDetail.disable') }}</span>
           </div>
           <div style="text-align: right">
             <ItemGroup>
               <el-button size="small" class="row-mt" @click="changeApi(true)">{{
-                  $t('userDetail.createApiKey')
-                }}
+              $t('userDetail.createApiKey')
+              }}
               </el-button>
               <el-button size="small" class="row-mt" @click="changeApi(false)">{{
-                  $t('userDetail.disableApiKey')
-                }}
+              $t('userDetail.disableApiKey')
+              }}
               </el-button>
             </ItemGroup>
           </div>
@@ -169,42 +147,36 @@
               {{ $t('userDetail.webAuthnIs') }}
             </p>
           </div>
-          <div
-            class="row-mt"
-            style="
-              padding: 12px 8px;
-              background: rgba(0, 0, 0, 0.02);
-              box-sizing: border-box;
-              border-radius: 2px;
-              font-size: 13px;
-            "
-          >
-            <div>- {{ $t('userDetail.regWebAuthn') }}</div>
-            <div>- {{ $t('userDetail.resetWebAuthn') }}</div>
-          </div>
-          <div style="text-align: right">
-            <ItemGroup>
-              <el-button size="small" type="primary" plain class="row-mt" @click="handleReg">{{
-                  $t('userDetail.regWebAuthnBtn')
+          <div class="sub-title row-mt">
+            <p class="sub-title-title">{{ $t('userDetail.regWebAuthnTitle') }}</p>
+            <p class="sub-title-info">
+              {{ $t('userDetail.regWebAuthn') }}
+            </p>
+            <div style="text-align: right;">
+              <ItemGroup style=" padding-right: 5px;">
+                <el-button size="small" type="primary" plain class="row-mt" @click="handleReg">{{
+                $t('userDetail.regWebAuthnBtn')
                 }}
-              </el-button>
-              <el-button size="small" type="danger" plain class="row-mt" @click="handleReset">{{
-                  $t('userDetail.resetWebAuthnBtn')
-                }}
-              </el-button>
-            </ItemGroup>
+                </el-button>
+              </ItemGroup>
+            </div>
           </div>
           <div
-            style="
-                padding: 12px 8px;
-                background: rgba(255, 0, 0, 0.1);
-                box-sizing: border-box;
-                border-radius: 2px;
-                font-size: 13px;
-                color: red;
-            "
-          >
-            *{{ $t('userDetail.webAuthnClaim') }}
+            style="border: solid 1px; border-color: pink; border-radius: 4px;  padding: 2px 5px 15px 5px;background: rgba(255, 0, 0, 0.1);font-size: 13px;color: red;">
+            <div class="sub-title row-mt">
+            <p class="sub-title-title">{{ $t('userDetail.delWebAuthnTitle') }}</p>
+            <p class="sub-title-info">
+              {{ $t('userDetail.delWebAuthn') }}
+            </p>
+            <div style="text-align: right;">
+              <ItemGroup>
+                <el-button size="small" type="danger" plain class="row-mt" @click="handleReset">{{
+                $t('userDetail.resetWebAuthnBtn')
+                }}
+                </el-button>
+              </ItemGroup>
+            </div>
+          </div>
           </div>
         </template>
       </Panel>
@@ -213,131 +185,132 @@
 </template>
 
 <script>
-  import router from '@/app/router';
-  import Panel from '../../components/Panel';
-  import LineLabel from '../../components/LineLabel';
-  import { API_URL, API_USER_API, API_USER_UPDATE, API_USER_WEBAUTHN_RESET } from '../service/common';
-  import { request } from '../service/protocol';
+import router from '@/app/router';
+import Panel from '../../components/Panel';
+import LineLabel from '../../components/LineLabel';
+import { API_URL, API_USER_API, API_USER_UPDATE, API_USER_WEBAUTHN_RESET } from '../service/common';
+import { request } from '../service/protocol';
+import ItemGroup from '../../components/ItemGroup.vue';
 
-  export default {
-    data() {
-      return {
-        readonly: {
-          a: true,
-          b: true,
-          c: true
-        },
-        userData: {
-          userName: '',
-          passWord: '',
-          passWord2: '',
-          apiKey: ''
-        },
-        moreUserInfo: {
-          api: API_URL,
-          safe: this.$t('userDetail.accountOk')
-        },
-        api: {
-          enable: false,
-          key: ''
-        },
-        rules: {
-          passWord: [{validator: this.validatePassword, trigger: 'blur'}],
-          passWord2: [{validator: this.validatePassword, trigger: 'blur'}]
-        }
-      };
-    },
-    computed: {
-      userInfo() {
-        return this.$store.state.userInfo;
+export default {
+  data() {
+    return {
+      readonly: {
+        a: true,
+        b: true,
+        c: true
+      },
+      userData: {
+        userName: '',
+        passWord: '',
+        passWord2: '',
+        apiKey: ''
+      },
+      moreUserInfo: {
+        api: API_URL,
+        safe: this.$t('userDetail.accountOk')
+      },
+      api: {
+        enable: false,
+        key: ''
+      },
+      rules: {
+        passWord: [{ validator: this.validatePassword, trigger: 'blur' }],
+        passWord2: [{ validator: this.validatePassword, trigger: 'blur' }]
       }
-    },
+    };
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo;
+    }
+  },
 
-    async mounted() {
-    },
-    methods: {
-      async update() {
-        await this.$refs.ruleFormRef.validate(async (valid) => {
-          if (!valid) return;
-          await this.$confirm(this.$t('userDetail.changeThisInfo'), this.$t('general.warn'), {
-            confirmButtonText: this.$t('general.confirm'),
-            cancelButtonText: this.$t('general.cancel'),
-            type: 'warning'
-          });
-          const passWord = this.userData.passWord;
-          try {
-            await request({
-              method: 'PUT',
-              url: API_USER_UPDATE,
-              data: {
-                passWord
-              }
-            });
-            this.$message({message: this.$t('userDetail.userDataUpdate'), type: 'success'});
-          } catch (error) {
-            this.$message({
-              message: error.toString(),
-              type: 'error'
-            });
-          }
-        });
-      },
-
-      async changeApi(enable) {
-        try {
-          const key = await request({
-            method: 'PUT',
-            url: API_USER_API,
-            data: {
-              enable
-            }
-          });
-          this.$store.commit('setApiKey', key);
-          this.$message({message: this.$t('userDetail.apiKeyChangeSuccess'), type: 'success'});
-        } catch (error) {
-          this.$message({
-            message: `Error: ${error}`,
-            type: 'error'
-          });
-        }
-      },
-      validatePassword(rule, value = '', callback) {
-        if (!value) return callback(new Error(this.$t('userDetail.inputPasswd')));
-        if (value.length < 9 || value.length > 36)
-          return callback(new Error(this.$t('userDetail.notStandard')));
-        // const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[0-9A-Za-z]{12,}$/;
-        // if (!reg.test(value)) return callback(new Error("Your password must contain: numbers, uppercase and lowercase letters"));
-        callback();
-      },
-      validatePassword2(rule, value = '', callback) {
-        if (value !== this.passWord) return callback(new Error(this.$t('userDetail.notSame')));
-
-        callback();
-      },
-
-      handleReg() {
-        router.push({path: '/register'});
-      },
-      async handleReset() {
-        await this.$confirm(this.$t('userDetail.confirmResetWebAuthn'), this.$t('general.warn'), {
+  async mounted() {
+  },
+  methods: {
+    async update() {
+      await this.$refs.ruleFormRef.validate(async (valid) => {
+        if (!valid) return;
+        await this.$confirm(this.$t('userDetail.changeThisInfo'), this.$t('general.warn'), {
           confirmButtonText: this.$t('general.confirm'),
           cancelButtonText: this.$t('general.cancel'),
           type: 'warning'
         });
+        const passWord = this.userData.passWord;
         try {
           await request({
-            method: 'DELETE',
-            url: API_USER_WEBAUTHN_RESET
+            method: 'PUT',
+            url: API_USER_UPDATE,
+            data: {
+              passWord
+            }
           });
-          this.$message({message: this.$t('userDetail.resetWebAuthnSuccess'), type: 'success'});
+          this.$message({ message: this.$t('userDetail.userDataUpdate'), type: 'success' });
         } catch (error) {
           this.$message({
             message: error.toString(),
             type: 'error'
           });
         }
+      });
+    },
+
+    async changeApi(enable) {
+      try {
+        const key = await request({
+          method: 'PUT',
+          url: API_USER_API,
+          data: {
+            enable
+          }
+        });
+        this.$store.commit('setApiKey', key);
+        this.$message({ message: this.$t('userDetail.apiKeyChangeSuccess'), type: 'success' });
+      } catch (error) {
+        this.$message({
+          message: `Error: ${error}`,
+          type: 'error'
+        });
       }
     },
-    components: {Panel, LineLabel}
-  };
+    validatePassword(rule, value = '', callback) {
+      if (!value) return callback(new Error(this.$t('userDetail.inputPasswd')));
+      if (value.length < 9 || value.length > 36)
+        return callback(new Error(this.$t('userDetail.notStandard')));
+      // const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[0-9A-Za-z]{12,}$/;
+      // if (!reg.test(value)) return callback(new Error("Your password must contain: numbers, uppercase and lowercase letters"));
+      callback();
+    },
+    validatePassword2(rule, value = '', callback) {
+      if (value !== this.passWord) return callback(new Error(this.$t('userDetail.notSame')));
+
+      callback();
+    },
+
+    handleReg() {
+      router.push({ path: '/register' });
+    },
+    async handleReset() {
+      await this.$confirm(this.$t('userDetail.confirmResetWebAuthn'), this.$t('general.warn'), {
+        confirmButtonText: this.$t('general.confirm'),
+        cancelButtonText: this.$t('general.cancel'),
+        type: 'warning'
+      });
+      try {
+        await request({
+          method: 'DELETE',
+          url: API_USER_WEBAUTHN_RESET
+        });
+        this.$message({ message: this.$t('userDetail.resetWebAuthnSuccess'), type: 'success' });
+      } catch (error) {
+        this.$message({
+          message: error.toString(),
+          type: 'error'
+        });
+      }
+    }
+  },
+  components: { Panel, LineLabel, ItemGroup }
+};
 </script>

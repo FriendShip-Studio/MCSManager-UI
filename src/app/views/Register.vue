@@ -55,14 +55,6 @@
                   {{ registerInfo }}
                 </span>
               </div>
-              <div class="register-info-wrapper row-mt">
-                <div>
-                  <span class="color-gray"
-                  >Powered by
-                    <a target="black" href="https://cloud.friendship.org.cn/">Friendship Cloud</a></span
-                  >
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -262,12 +254,6 @@
     transition: all 0.4s 0.2s;
   }
 
-  #register-panel:hover {
-    /* box-shadow: 0 0px 18px rgba(0, 0, 0, 0.1); */
-    border: 1px solid #828487;
-    transform: scale(1.04);
-  }
-
   .register-btn-wrapper {
     display: flex;
     justify-content: space-between;
@@ -305,7 +291,9 @@
 
   #image-wrapper {
     display: grid;
-    place-items: center;
+    padding-top: 2%;
+    align-items: start;
+    justify-items:center;
     margin-right: 44px;
   }
 

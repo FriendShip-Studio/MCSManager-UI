@@ -21,38 +21,40 @@
   ></div>
 
   <div id="login-panel-wrapper" :class="{ 'login-panel-wrapper-out': closeWindow }">
-    <Panel id="login-panel" body-style="padding: 44px;" v-loading="loading">
+    <Panel id="login-panel" v-loading="loading" body-style="padding: 0;">
       <template #default>
-        <div id="login-wrapper" class="main-wrapper" v-if="!isFailed">
-          <div class="login-title">{{ $t("webauthn.login.loading") }}</div>
-          <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
-          <div class="login-progress">
-            <el-progress
-              :show-text="false"
-              :percentage="75"
-              :format="format"
-              :indeterminate="true"
-            />
-          </div>
+        <div id="body-wrapper">
+          <!-- <TransitionGroup id="body-wrapper" name="slide" tag="div"> -->
+          <Transition name="slide">
+            <div id="login-wrapper" class="main-wrapper" v-if="!isFailed">
+              <div class="login-title">{{ $t("webauthn.login.loading") }}</div>
+              <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
+              <div class="login-progress">
+                <el-progress :show-text="false" :percentage="75" :indeterminate="true" />
+              </div>
+            </div>
+          </Transition>
+          <Transition name="slide">
+            <div id="error-wrapper" class="main-wrapper" v-if="isFailed">
+              <div class="login-title">{{ $t("webauthn.error.title") }}</div>
+              <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
+              <div class="login-progress">
+                <el-progress
+                  :show-text="false"
+                  :percentage="75"
+                  :indeterminate="true"
+                  status="exception"
+                />
+              </div>
+            </div>
+          </Transition>
         </div>
-        <div id="error-wrapper" class="main-wrapper" v-if="isFailed">
-          <div class="login-title">{{ $t("webauthn.error.title") }}</div>
-          <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
-          <div class="login-progress">
-            <el-progress
-              :show-text="false"
-              :percentage="75"
-              :format="format"
-              :indeterminate="true"
-              status="exception"
-            />
-          </div>
-        </div>
-        <el-button size="small" type="danger" plain @click="isFailed = !isFailed">
-          这个按钮用来切换isFailed
-        </el-button>
+        <!-- </TransitionGroup> -->
       </template>
     </Panel>
+    <el-button type="primary" @click="isFailed = !isFailed">
+      <span class="rainbow">牛逼</span>
+    </el-button>
   </div>
   <div>
     <el-row :gutter="20">
@@ -215,6 +217,8 @@ export default {
   right: 0;
   bottom: 0;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   transition-property: all;
   transition-duration: 1.5s;
@@ -231,8 +235,20 @@ export default {
   width: 450px;
   transition: all 0.4s 0.2s;
 }
-
+#body-wrapper {
+  padding: 44px;
+  overflow-x: hidden;
+  display: grid;
+}
+#body-wrapper > * {
+  grid-row-start: 0;
+  grid-row-end: 1;
+  grid-column-start: 0;
+  grid-column-end: 1;
+}
 .main-wrapper {
+  width: 360px;
+  flex-shrink: 0;
   font-size: 16px;
 }
 
@@ -248,5 +264,56 @@ export default {
 .login-progress {
   margin-top: 50px;
   width: 100%;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.5s;
+}
+.slide-enter-active {
+  position: relative;
+  visibility: visible;
+}
+.slide-leave-active {
+  position: relative;
+  visibility: hidden;
+}
+.slide-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.slide-enter-to,
+.slide-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.rainbow {
+  background-image: linear-gradient(
+    to right,
+    orangered,
+    orange,
+    gold,
+    lightgreen,
+    cyan,
+    dodgerblue,
+    mediumpurple,
+    hotpink,
+    orangered
+  );
+  background-size: 110vw;
+  animation: sliding 30s linear infinite;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+}
+@keyframes sliding {
+  to {
+    background-position: -2000vw;
+  }
 }
 </style>

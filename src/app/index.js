@@ -16,7 +16,7 @@ import "../assets/css/dark-mode.scss";
 import App from "./App.vue";
 import "./service/protocol";
 import directive from "./directive"
-
+import animate from 'animate.css';
 
 
 const app = createApp(App);
@@ -25,7 +25,7 @@ const app = createApp(App);
 import store from "./store";
 app.use(store);
 app.use(i18n)
-
+app.use(animate)
 
 // custom directive
 directive(app)

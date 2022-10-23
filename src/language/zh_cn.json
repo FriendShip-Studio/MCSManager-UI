@@ -40,8 +40,8 @@
     "logoutError": "退出失败"
   },
   "login": {
-    "title": "身份验证",
-    "titleInfo": "使用服务器的 MCSManager 账号登录到面板",
+    "title": "使用账户密码登入",
+    "titleInfo": "通过具有 Friendship 控制中心权限的账户登录",
     "account": "账号",
     "passWord": "密码",
     "forgotPassword": "忘记密码",
@@ -68,7 +68,10 @@
       "continue": "继续",
       "return": "不，谢谢"
     },
-    "login": {}
+    "login": {
+      "title": "使用 Friendship Auth 登入",
+      "info":"通过已注册在您账户下的可信安全设备认证登录"
+    }
   },
   "overview": {
     "systemInfoTable": "系统信息总览",

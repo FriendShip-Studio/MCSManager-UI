@@ -23,7 +23,7 @@ module.exports = {
     port: 8080,
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:23333"
+        target: "https://panel.friendship.org.cn"
       }
     }
   },

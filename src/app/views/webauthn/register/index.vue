@@ -101,11 +101,6 @@ export default {
     setContext(ctx) {
       this.ctx = ctx;
     }
-  },
-  async mounted() {
-    console.log("Welcome use MCSManager.");
-    console.log("Copyright 2022 MCSManager All rights reserved.");
-    // Request register copyleft text
   }
 };
 </script>

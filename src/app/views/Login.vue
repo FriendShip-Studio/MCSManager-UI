@@ -69,13 +69,24 @@
                 </transition>
                 <el-button
                   type="primary"
+                  plain
+                  size="small"
+                  style="width: 110px"
+                  @click="gotoWebauthnLogin"
+                  :disabled="close"
+                  :loading="loading"
+                >
+                  {{ $t("login.webauthn") }}
+                </el-button>
+                <el-button
+                  type="primary"
                   size="small"
                   style="width: 110px"
                   @click="login"
                   :disabled="close"
                   :loading="loading"
                 >
-                  {{ loginText }}
+                  {{ $t("login.login") }}
                 </el-button>
               </div>
               <div class="login-info-wrapper row-mt" v-if="loginInfo">
@@ -123,6 +134,7 @@
 
 <script>
 import Panel from "../../components/Panel";
+import router from "../router";
 // eslint-disable-next-line no-unused-vars
 // import router from "../router";
 import { API_USER_LOGIN, API_USER_LOGIN_INFO, sleep } from "../service/common";
@@ -138,7 +150,6 @@ export default {
       },
       close: false,
       closeWindow: false,
-      loginText: this.$t("login.login"),
       loading: false,
       cause: "",
       loginInfo: ""
@@ -148,7 +159,9 @@ export default {
     submit() {
       this.login();
     },
-
+    gotoWebauthnLogin() {
+      router.push({ path: "/webauthn/login" });
+    },
     async login() {
       try {
         if (!this.form.username || !this.form.username) {

@@ -21,7 +21,6 @@ import FileManager from './views/FileManager';
 import FileManagerEditor from './views/FileManagerEditor';
 import Home from './views/Home';
 import Login from './views/Login';
-import Register from './views/Register';
 import Trigger from './views/Trigger';
 import Root from './views/Root';
 import UserResources from './views/UserResources';
@@ -31,6 +30,9 @@ import Schedule from './views/Schedule';
 import Update from './views/Update';
 import Quickstart from './views/quickstart';
 import Install from './views/Install';
+import WebAuthn from './views/webauthn';
+import WebAuthnRegister from './views/webauthn/register';
+import WebAuthnLogin from './views/webauthn/login';
 
 const routes = [
   {
@@ -170,11 +172,6 @@ const routes = [
     component: Login
   },
   {
-    path: '/register',
-    name: 'register',
-    component: Register
-  },
-  {
     path: '/quickstart',
     name: 'quickStart',
     component: Quickstart
@@ -188,6 +185,23 @@ const routes = [
     path: '/install',
     name: 'install',
     component: Install
+  },
+  {
+    path: '/webauthn',
+    name: 'webauthn',
+    component: WebAuthn,
+    children: [
+      {
+        path: 'register',
+        name: 'webauthnRegister',
+        component: WebAuthnRegister
+      },
+      {
+        path: 'login',
+        name: 'webauthnLogin',
+        component: WebAuthnLogin
+      }
+    ]
   }
 ];
 

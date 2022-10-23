@@ -138,7 +138,7 @@
   </el-row>
   <el-row :gutter="20">
     <el-col :md="8" :offset="0">
-      <Panel style="height: 350px">
+      <Panel>
         <template #title>{{ $t('userDetail.webAuthn') }}</template>
         <template #default>
           <div class="sub-title row-mt">
@@ -289,7 +289,7 @@ export default {
     },
 
     handleReg() {
-      router.push({ path: '/register' });
+      router.push({ path: '/webauthn/register' });
     },
     async handleReset() {
       await this.$confirm(this.$t('userDetail.confirmResetWebAuthn'), this.$t('general.warn'), {

@@ -57,13 +57,19 @@
       "message": "无法获取身份数据，可能是您已被封禁，或者网络问题，请尝试刷新页面"
     }
   },
-  "register": {
-    "title": "使用 Friendship Auth 登入",
-    "info": "通过使用 Friendship Auth 服务，您可以在不输入密码的情况下，通过安全认证因素 (如指纹、面孔或者移动安全设备等) 访问 Friendship Cloud 服务。",
-    "notice-start": "如果您希望以 ",
-    "notice-end": " 的身份注册，请继续，我们将为此设备注册 Friendship Auth 服务。",
-    "continue": "继续",
-    "return": "不，谢谢"
+  "webauthn":{
+    "title": "Friendship Auth",
+    "register": {
+      "title": "使用 Friendship Auth 登入",
+      "info": "通过使用 Friendship Auth 服务，您可以在不输入密码的情况下，通过安全认证因素 (如指纹、面孔或者移动安全设备等) 访问 Friendship Cloud 服务。",
+      "notice-start": "如果您希望以 ",
+      "notice-end": " 的身份注册，请继续，我们将为此设备注册 Friendship Auth 服务。",
+      "continue": "继续",
+      "return": "不，谢谢"
+    },
+    "login":{
+
+    }
   },
   "overview": {
     "systemInfoTable": "系统信息总览",

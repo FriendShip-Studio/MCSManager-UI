@@ -79,7 +79,7 @@ export default {
   components: { Panel, Starter, Processing, Finish },
   data: function () {
     return {
-      step: "starter",
+      step: "processing",
       close: false,
       closeWindow: false,
       loading: false,
@@ -94,9 +94,6 @@ export default {
       this.closeWindow = true;
       await sleep(1500);
       this.$router.back();
-    },
-    processStep(step) {
-      this.step = step;
     },
     setContext(ctx) {
       this.ctx = ctx;

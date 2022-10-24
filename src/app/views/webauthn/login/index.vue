@@ -40,12 +40,15 @@
         <template #default>
           <div id="body-wrapper">
             <div id="error-wrapper" class="error-wrapper">
-              <i class="el-icon-grid"></i>
+              <i class="el-icon-cirle-close-filled"></i>
               <div class="error-title">{{ $t("webauthn.error.title") }}</div>
               <el-divider />
               <div class="error-info">{{ $t("webauthn.error.info_1") }}</div>
               <div class="error-info">{{ $t("webauthn.error.info_2") }}</div>
               <div class="error-detail">郁郁不喜欢我了，所以登录失败了</div>
+              <div class="error-return">
+                <el-button type="warning" @click="handleReturn">返回登录页面</el-button>
+              </div>
             </div>
           </div>
         </template>
@@ -80,7 +83,6 @@
 
 <script>
 import Panel from "@/components/Panel";
-import { sleep } from "@/app/service/common.js";
 
 // eslint-disable-next-line no-unused-vars
 // import router from "../router";
@@ -98,7 +100,6 @@ export default {
     async handleReturn() {
       this.close = true;
       this.closeWindow = true;
-      await sleep(1500);
       this.$router.back();
     }
   }
@@ -282,6 +283,11 @@ export default {
 
 .main-wrapper > * {
   margin-bottom: 24px;
+}
+
+.error-return {
+  text-align: right;
+  margin-top: 12px;
 }
 
 .login-title {

@@ -83,7 +83,7 @@
 
 <script>
 import Panel from "@/components/Panel";
-
+import { sleep } from "@/app/service/common.js";
 // eslint-disable-next-line no-unused-vars
 // import router from "../router";
 export default {
@@ -100,6 +100,7 @@ export default {
     async handleReturn() {
       this.close = true;
       this.closeWindow = true;
+      await sleep(1500);
       this.$router.back();
     }
   }

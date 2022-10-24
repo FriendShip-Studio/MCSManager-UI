@@ -1,5 +1,6 @@
 <!--
   Copyright (C) 2022 RainChen <asak@irain.cc>
+    I really wanna be RainChen's dog. -- BiDuang
 -->
 
 <template>
@@ -21,39 +22,42 @@
   ></div>
 
   <div id="login-panel-wrapper" :class="{ 'login-panel-wrapper-out': closeWindow }">
-    <Panel id="login-panel" v-loading="loading" body-style="padding: 0;">
-      <template #default>
-        <div id="body-wrapper">
-          <!-- <TransitionGroup id="body-wrapper" name="slide" tag="div"> -->
-          <Transition name="slide">
-            <div id="login-wrapper" class="main-wrapper" v-if="!isFailed">
+    <Transition name="slide">
+      <Panel id="login-panel" v-loading="loading" body-style="padding: 0;" v-if="!isFailed">
+        <template #default>
+          <div id="body-wrapper">
+            <!-- <TransitionGroup id="body-wrapper" name="slide" tag="div"> -->
+            <div id="login-wrapper" class="main-wrapper">
               <div class="login-title">{{ $t("webauthn.login.loading") }}</div>
               <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
               <div class="login-progress">
-                <el-progress :show-text="false" :percentage="75" :indeterminate="true" />
+                <el-progress :show-text="false" :percentage="100" :indeterminate="true" />
               </div>
             </div>
-          </Transition>
-          <Transition name="slide">
-            <div id="error-wrapper" class="main-wrapper" v-if="isFailed">
-              <div class="login-title">{{ $t("webauthn.error.title") }}</div>
-              <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
-              <div class="login-progress">
-                <el-progress
-                  :show-text="false"
-                  :percentage="75"
-                  :indeterminate="true"
-                  status="exception"
-                />
-              </div>
+          </div>
+        </template>
+      </Panel>
+    </Transition>
+    <Transition name="slide">
+      <Panel id="error-panel" v-loading="loading" body-style="padding: 0;" v-if="isFailed">
+        <template #default>
+          <div id="body-wrapper">
+            <div id="error-wrapper" class="error-wrapper">
+              <i class="el-icon-grid"></i>
+              <div class="error-title">{{ $t("webauthn.error.title") }}</div>
+              <el-divider />
+              <div class="error-info">{{ $t("webauthn.error.info_1") }}</div>
+              <div class="error-info">{{ $t("webauthn.error.info_2")}}</div>
+              <div class="error-detail">郁郁不喜欢我了，所以登录失败了</div>
             </div>
-          </Transition>
-        </div>
-        <!-- </TransitionGroup> -->
-      </template>
-    </Panel>
+
+          </div>
+          <!-- </TransitionGroup> -->
+        </template>
+      </Panel>
+    </Transition>
     <el-button type="primary" @click="isFailed = !isFailed">
-      <span class="rainbow">牛逼</span>
+      <span class="rainbow">寄了</span>
     </el-button>
   </div>
   <div>
@@ -235,24 +239,62 @@ export default {
   width: 450px;
   transition: all 0.4s 0.2s;
 }
+
+#error-panel {
+  min-height: 460px;
+  width: 900px;
+  transition: all 0.4s 0.2s;
+}
+
 #body-wrapper {
   padding: 44px;
   overflow-x: hidden;
   display: grid;
 }
-#body-wrapper > * {
+
+#body-wrapper>* {
   grid-row-start: 0;
   grid-row-end: 1;
   grid-column-start: 0;
   grid-column-end: 1;
 }
+
 .main-wrapper {
   width: 360px;
   flex-shrink: 0;
   font-size: 16px;
 }
 
-.main-wrapper > * {
+.error-wrapper {
+  width: 100%;
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.error-title {
+  text-align: left;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.error-info{
+  text-align: left;
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+.error-detail{
+  text-align: left;
+  font-size: 14px;
+  margin-top: 12px;
+  background-color: rgba(161, 161, 161, 0.295);
+  padding: 15px;
+  border: 1px solid --el-box-shadow-lighter;
+  border-radius: 4px;
+}
+
+.main-wrapper>* {
   margin-bottom: 24px;
 }
 
@@ -270,47 +312,51 @@ export default {
 .slide-leave-active {
   transition: all 0.5s;
 }
+
 .slide-enter-active {
   position: relative;
   visibility: visible;
 }
+
 .slide-leave-active {
   position: relative;
   visibility: hidden;
 }
+
 .slide-enter-from {
   transform: translateX(100%);
   opacity: 0;
 }
+
 .slide-enter-to,
 .slide-leave-from {
   transform: translateX(0);
   opacity: 1;
 }
+
 .slide-leave-to {
   transform: translateX(-100%);
   opacity: 0;
 }
 
 .rainbow {
-  background-image: linear-gradient(
-    to right,
-    orangered,
-    orange,
-    gold,
-    lightgreen,
-    cyan,
-    dodgerblue,
-    mediumpurple,
-    hotpink,
-    orangered
-  );
+  background-image: linear-gradient(to right,
+      orangered,
+      orange,
+      gold,
+      lightgreen,
+      cyan,
+      dodgerblue,
+      mediumpurple,
+      hotpink,
+      orangered);
   background-size: 110vw;
   animation: sliding 30s linear infinite;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bold;
 }
+
 @keyframes sliding {
   to {
     background-position: -2000vw;

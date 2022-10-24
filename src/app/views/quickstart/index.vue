@@ -1,7 +1,6 @@
 <!--
   Copyright (C) 2022 MCSManager <mcsmanager-dev@outlook.com>
 -->
-
 <template>
   <div v-if="displayType === 1" v-loading="loading">
     <div class="quick-title">
@@ -28,29 +27,75 @@
               </template>
             </QuickStartButton>
           </ItemGroup>
+
+          <div v-if="item.extra" style="text-align: center">
+            <el-link type="primary" @click="item.fn(item.value)">
+              {{ item.extra.title }}
+            </el-link>
+          </div>
         </el-col>
       </el-row>
     </div>
 
-    <div v-if="step === 0" class="task-container">
-      <el-link type="primary" :underline="false">
-        查看正在进行的任务<i class="el-icon-right"></i>
-      </el-link>
+    <div class="task-container" v-if="selectedHostUuid">
+      <div>
+        <h4>{{ $t("views.quickstart_index.001") }}</h4>
+      </div>
+      <div>
+        <div v-if="taskList.length === 0">
+          <el-link type="info" :underline="false">{{ $t("views.quickstart_index.002") }}</el-link>
+        </div>
+        <div class="task-btn" v-for="(item, index) in taskList" :key="index">
+          <span>
+            <el-link type="primary">
+              {{ index + 1 }}. {{ item.detail.instanceConfig.nickname }}
+            </el-link>
+            <el-link
+              type="info"
+              v-if="item.status === 0"
+              style="margin-left: 4px"
+              @click="toInstance(selectedHostUuid, item.detail.instanceUuid)"
+              >{{ $t("views.quickstart_index.003") }}</el-link
+            >
+          </span>
+          <span style="margin-left: 8px">
+            <span v-if="item.status === 0">
+              <el-tag type="success" size="mini">{{ $t("CommonText.001") }}</el-tag>
+            </span>
+            <span v-else-if="item.status === 1">
+              <el-tag type="primary" size="mini">
+                <i class="el-icon-loading"></i>{{ $t("CommonText.002") }}</el-tag
+              >
+            </span>
+            <span v-else>
+              <el-tag type="danger" size="mini">{{ $t("CommonText.003") }}</el-tag>
+            </span>
+          </span>
+        </div>
+      </div>
+      <div v-if="taskList.length > 0">
+        <el-link type="info" @click="refresh" size="mini">{{ $t("CommonText.004") }}</el-link>
+      </div>
     </div>
   </div>
-  <McPreset :remote-uuid="selectedHostUuid" v-else-if="displayType === 2"></McPreset>
+  <McPreset
+    :task-id="taskDetailPageId"
+    :remote-uuid="selectedHostUuid"
+    v-else-if="displayType === 2"
+  ></McPreset>
 </template>
 
 <script>
 import QuickStartButton from "@/components/SelectBlock";
 import { request } from "@/app/service/protocol";
-import { API_SERVICE } from "../../service/common";
+import { API_INSTANCE_ASYNC_QUERY, API_SERVICE } from "../../service/common";
 import McPreset from "./McPreset";
-
 export default {
-  // eslint-disable-next-line vue/no-unused-components
-  components: { QuickStartButton, McPreset },
-  inject: ["appLoading"],
+  components: {
+    QuickStartButton,
+    McPreset
+  },
+  inject: ["app"],
   data: function () {
     return {
       loading: false,
@@ -59,21 +104,21 @@ export default {
       remoteObjects: [],
       quickStartType: 0,
       selectedHostUuid: "",
+      invTask: null,
+      taskDetailPageId: "",
       step: 0,
       isMC: false,
-      // 已经在运行的任务列表
-      taskList: [
-        {
-          id: 213213,
-          daemonUuid: "sad"
-        }
-      ],
+      taskList: [],
       quickItems: [
         {
           title: this.$t("quickStart.quickItems[0].title"),
           subTitle: this.$t("quickStart.quickItems[0].subTitle"),
           value: 1,
-          fn: this.selectQuickStartType
+          fn: this.selectQuickStartType,
+          extra: {
+            title: window.$t("views.quickstart_index.004"),
+            fn: this.selectQuickStartType
+          }
         },
         {
           title: this.$t("quickStart.quickItems[1].title"),
@@ -88,26 +133,38 @@ export default {
           fn: this.selectQuickStartType
         }
       ],
-
       minecraftCreateMethod: [
         {
-          title: "一键快速开服（推荐初学者）",
-          subTitle: "适合初学者，通过预设模板快速帮助您部署和启动服务器！",
+          title: window.$t("views.quickstart_index.005"),
+          subTitle: window.$t("views.quickstart_index.006"),
           value: 1,
           fn: this.mcSelectCreateMethod
         },
         {
-          title: "自定义创建服务器",
-          subTitle: "适合初学者，快速帮助您部署和启动服务器！",
+          title: window.$t("views.quickstart_index.007"),
+          subTitle: window.$t("views.quickstart_index.008"),
           value: 2,
           fn: this.mcSelectCreateMethod
         }
       ]
     };
   },
+
   async mounted() {
+    this.taskDetailPageId = this.$route.query.task_id;
+    this.selectedHostUuid = this.$route.query.remote_uuid;
+
+    if (this.taskDetailPageId) {
+      this.displayType = 2;
+    }
+
     await this.initRemoteHost();
   },
+
+  unmounted() {
+    clearInterval(this.invTask);
+  },
+
   methods: {
     async initRemoteHost() {
       this.remoteObjects = await request({
@@ -126,38 +183,44 @@ export default {
       });
     },
 
-    // 选择快速启动
     selectQuickStartType(v) {
       this.step++;
+
       if (v === 1) {
         this.isMC = true;
       }
+
       if (v === 4) {
         return window.open("https://docs.mcsmanager.com/");
       }
+
       this.quickStartType = v;
       this.title = this.$t("quickStart.whichServer");
 
-      // 载入主机选择
       this.quickItems = this.remoteObjects.map((v) => {
         return {
           title: `HOST: ${v.ip}:${v.port}`,
-          subTitle: "备注：" + v.remarks,
+          subTitle: window.$t("CommonText.005") + v.remarks,
           value: v.uuid,
           fn: this.selectHost
         };
       });
+
+      if (this.quickItems.length === 1) {
+        this.selectHost(this.quickItems[0].value);
+      }
     },
 
-    // 选择主机
     async selectHost(uuid) {
       this.step++;
       console.log("Select host:", uuid);
       this.selectedHostUuid = uuid;
-      this.title = "选择创建方式";
+      this.title = window.$t("views.quickstart_index.009");
       await this.startLoading();
+
       if (this.isMC) {
         this.quickItems = this.minecraftCreateMethod;
+        this.startQueryTasks();
       } else {
         this.$router.push({
           path: `/new_instance/${this.selectedHostUuid}`,
@@ -170,6 +233,7 @@ export default {
 
     async mcSelectCreateMethod(type = 0) {
       this.step++;
+
       if (type === 1) {
         await this.startLoading();
         this.displayType = 2;
@@ -183,10 +247,60 @@ export default {
           }
         });
       }
+    },
+
+    async startQueryTasks() {
+      await this.queryAllTaskStatus();
+      setTimeout(() => {
+        this.queryAllTaskStatus();
+      }, 3000);
+    },
+
+    refresh() {
+      this.queryAllTaskStatus();
+      this.$message({
+        message: this.$t("general.refreshFinish"),
+        type: "success"
+      });
+    },
+
+    async queryAllTaskStatus() {
+      const tasks = await request({
+        method: "POST",
+        url: API_INSTANCE_ASYNC_QUERY,
+        params: {
+          remote_uuid: this.selectedHostUuid,
+          uuid: "-",
+          task_name: "quick_install"
+        },
+        data: {}
+      });
+      this.taskList = tasks;
+    },
+
+    toTaskDetail(item = {}) {
+      this.$router.push({
+        path: "/quickstart",
+        query: {
+          task_id: item.taskId,
+          remote_uuid: this.selectedHostUuid
+        }
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    },
+
+    // 前往控制台
+    toInstance(remoteUuid, instanceUuid) {
+      this.$router.push({
+        path: `/terminal/${remoteUuid}/${instanceUuid}/`
+      });
     }
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .quick-title {
   display: flex;
@@ -202,11 +316,12 @@ export default {
   width: 100%;
 }
 .task-container {
-  text-align: center;
+  text-align: left;
   margin-top: 30px;
-
-  .el-link {
-    font-size: 18px;
-  }
+  width: 300px;
+  margin: auto;
+}
+.task-btn {
+  margin: 8px;
 }
 </style>

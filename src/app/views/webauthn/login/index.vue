@@ -22,11 +22,10 @@
   ></div>
 
   <div id="login-panel-wrapper" :class="{ 'login-panel-wrapper-out': closeWindow }">
-    <Transition name="slide">
+    <Transition name="slide" mode="out-in" appear>
       <Panel id="login-panel" v-loading="loading" body-style="padding: 0;" v-if="!isFailed">
         <template #default>
           <div id="body-wrapper">
-            <!-- <TransitionGroup id="body-wrapper" name="slide" tag="div"> -->
             <div id="login-wrapper" class="main-wrapper">
               <div class="login-title">{{ $t("webauthn.login.loading") }}</div>
               <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
@@ -37,9 +36,7 @@
           </div>
         </template>
       </Panel>
-    </Transition>
-    <Transition name="slide">
-      <Panel id="error-panel" v-loading="loading" body-style="padding: 0;" v-if="isFailed">
+      <Panel id="error-panel" v-loading="loading" body-style="padding: 0;" v-else>
         <template #default>
           <div id="body-wrapper">
             <div id="error-wrapper" class="error-wrapper">
@@ -47,12 +44,10 @@
               <div class="error-title">{{ $t("webauthn.error.title") }}</div>
               <el-divider />
               <div class="error-info">{{ $t("webauthn.error.info_1") }}</div>
-              <div class="error-info">{{ $t("webauthn.error.info_2")}}</div>
+              <div class="error-info">{{ $t("webauthn.error.info_2") }}</div>
               <div class="error-detail">郁郁不喜欢我了，所以登录失败了</div>
             </div>
-
           </div>
-          <!-- </TransitionGroup> -->
         </template>
       </Panel>
     </Transition>
@@ -237,7 +232,6 @@ export default {
 #login-panel {
   min-height: 230px;
   width: 450px;
-  transition: all 0.4s 0.2s;
 }
 
 #error-panel {
@@ -249,14 +243,6 @@ export default {
 #body-wrapper {
   padding: 44px;
   overflow-x: hidden;
-  display: grid;
-}
-
-#body-wrapper>* {
-  grid-row-start: 0;
-  grid-row-end: 1;
-  grid-column-start: 0;
-  grid-column-end: 1;
 }
 
 .main-wrapper {
@@ -278,13 +264,13 @@ export default {
   font-weight: 600;
 }
 
-.error-info{
+.error-info {
   text-align: left;
   font-size: 16px;
   margin-top: 12px;
 }
 
-.error-detail{
+.error-detail {
   text-align: left;
   font-size: 14px;
   margin-top: 12px;
@@ -294,7 +280,7 @@ export default {
   border-radius: 4px;
 }
 
-.main-wrapper>* {
+.main-wrapper > * {
   margin-bottom: 24px;
 }
 
@@ -310,7 +296,7 @@ export default {
 
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 0.5s;
+  transition: all 0.3s ease-in-out;
 }
 
 .slide-enter-active {
@@ -324,7 +310,7 @@ export default {
 }
 
 .slide-enter-from {
-  transform: translateX(100%);
+  transform: translateX(120px);
   opacity: 0;
 }
 
@@ -335,21 +321,23 @@ export default {
 }
 
 .slide-leave-to {
-  transform: translateX(-100%);
+  transform: translateX(-120px);
   opacity: 0;
 }
 
 .rainbow {
-  background-image: linear-gradient(to right,
-      orangered,
-      orange,
-      gold,
-      lightgreen,
-      cyan,
-      dodgerblue,
-      mediumpurple,
-      hotpink,
-      orangered);
+  background-image: linear-gradient(
+    to right,
+    orangered,
+    orange,
+    gold,
+    lightgreen,
+    cyan,
+    dodgerblue,
+    mediumpurple,
+    hotpink,
+    orangered
+  );
   background-size: 110vw;
   animation: sliding 30s linear infinite;
   background-clip: text;

@@ -4,22 +4,11 @@
 -->
 
 <template>
-  <div
-    id="login-layer-top"
-    :class="{ 'login-layer-fadeout-top': close, 'login-layer-fadein-top': !close }"
-  ></div>
-  <div
-    id="login-layer-left"
-    :class="{ 'login-layer-fadeout-left': close, 'login-layer-fadein-left': !close }"
-  ></div>
-  <div
-    id="login-layer-right"
-    :class="{ 'login-layer-fadeout-right': close, 'login-layer-fadein-right': !close }"
-  ></div>
-  <div
-    id="login-layer-bottom"
-    :class="{ 'login-layer-fadeout-bottom': close, 'login-layer-fadein-bottom': !close }"
-  ></div>
+  <div id="login-layer-top" :class="{ 'login-layer-fadeout-top': close, 'login-layer-fadein-top': !close }"></div>
+  <div id="login-layer-left" :class="{ 'login-layer-fadeout-left': close, 'login-layer-fadein-left': !close }"></div>
+  <div id="login-layer-right" :class="{ 'login-layer-fadeout-right': close, 'login-layer-fadein-right': !close }"></div>
+  <div id="login-layer-bottom" :class="{ 'login-layer-fadeout-bottom': close, 'login-layer-fadein-bottom': !close }">
+  </div>
 
   <div id="login-panel-wrapper" :class="{ 'login-panel-wrapper-out': closeWindow }">
     <Transition name="slide" mode="out-in" appear>
@@ -45,7 +34,10 @@
               <el-divider />
               <div class="error-info">{{ $t("webauthn.error.info_1") }}</div>
               <div class="error-info">{{ $t("webauthn.error.info_2") }}</div>
-              <div class="error-detail">郁郁不喜欢我了，所以登录失败了</div>
+              <div class="error-detail">错误信息代码</div>
+              <div class="error-contact">
+                <span v-html="$t('webauthn.error.contact')"></span>
+              </div>
               <div class="error-return">
                 <el-button type="warning" @click="handleReturn">返回登录页面</el-button>
               </div>
@@ -83,7 +75,6 @@
 
 <script>
 import Panel from "@/components/Panel";
-import { sleep } from "@/app/service/common.js";
 // eslint-disable-next-line no-unused-vars
 // import router from "../router";
 export default {
@@ -100,7 +91,6 @@ export default {
     async handleReturn() {
       this.close = true;
       this.closeWindow = true;
-      await sleep(1500);
       this.$router.back();
     }
   }
@@ -282,13 +272,19 @@ export default {
   border-radius: 4px;
 }
 
-.main-wrapper > * {
+.main-wrapper>* {
   margin-bottom: 24px;
 }
 
 .error-return {
   text-align: right;
   margin-top: 12px;
+}
+
+.error-contact{
+  text-align: left;
+  margin-top: 14px;
+  font-size: small;
 }
 
 .login-title {
@@ -333,18 +329,16 @@ export default {
 }
 
 .rainbow {
-  background-image: linear-gradient(
-    to right,
-    orangered,
-    orange,
-    gold,
-    lightgreen,
-    cyan,
-    dodgerblue,
-    mediumpurple,
-    hotpink,
-    orangered
-  );
+  background-image: linear-gradient(to right,
+      orangered,
+      orange,
+      gold,
+      lightgreen,
+      cyan,
+      dodgerblue,
+      mediumpurple,
+      hotpink,
+      orangered);
   background-size: 110vw;
   animation: sliding 30s linear infinite;
   background-clip: text;

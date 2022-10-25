@@ -161,8 +161,9 @@
               </ItemGroup>
             </div>
           </div>
+          <h3>危险操作区</h3>
           <div
-            style="border: solid 1px; border-color: pink; border-radius: 4px;  padding: 2px 5px 15px 5px;background: rgba(255, 0, 0, 0.1);font-size: 13px;color: red;">
+            style="border: solid 1px; border-color: pink; border-radius: 4px; padding: 0px 5px 15px 5px;background: rgba(255, 0, 0, 0.1);font-size: 13px;color: red;">
             <div class="sub-title row-mt">
             <p class="sub-title-title">{{ $t('userDetail.delWebAuthnTitle') }}</p>
             <p class="sub-title-info">

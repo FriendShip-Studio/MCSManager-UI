@@ -89,7 +89,8 @@
     "error":{
       "title":"未能成功登录",
       "info_1":"很遗憾，在尝试使您通过 Friendship Auth 服务登录时遇到了致命错误。",
-      "info_2":"下面的信息可能有助于您排除故障:"
+      "info_2":"下面的信息可能有助于您排除故障:",
+      "contact":"如果此故障持续出现，请 <a href=\"mailto://me@biduang.cn\" style=\"font-weight:1000\">联系支持人员</a>"
     }
   },
   "overview": {

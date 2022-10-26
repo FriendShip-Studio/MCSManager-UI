@@ -1,6 +1,6 @@
 <!--
   Copyright (C) 2022 RainChen <asak@irain.cc>
-    I really wanna be RainChen's dog. -- BiDuang
+    I really wanna be RainChen's dog. -- BiDuang  <me@bidang.cn>
 -->
 
 <template>
@@ -281,7 +281,7 @@ export default {
   margin-top: 12px;
 }
 
-.error-contact{
+.error-contact {
   text-align: left;
   margin-top: 14px;
   font-size: small;

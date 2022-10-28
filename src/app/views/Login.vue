@@ -60,14 +60,17 @@
           </div>
           <div id="authn-login" style="flex-grow:0.3; padding-left: 20px;">
             <div id="authn-title" style="font-size: 24px; font-weight: 600">{{ $t("webauthn.login.title") }}</div>
-            <p style="font-size: 14px;">{{ $t("webauthn.login.info")}}</p>
+            <p style="font-size: 14px;">{{ $t("webauthn.login.info") }}</p>
             <div style="margin-top: 22px; width: 95%;">
-              <el-input type="text" name="mcsm_username" v-model="form.username" :placeholder="$t('login.account')"
-                autocomplete="on" :disabled="close" @keyup.enter="submit">
+              <el-input type="text" name="webauthn_username" v-model="webauthn.username"
+                :placeholder="$t('login.account')" autocomplete="on" :disabled="close" @keyup.enter="gotoWebauthnLogin">
                 <template #suffix>
                   <i class="el-icon-user"></i>
                 </template>
               </el-input>
+              <transition name="fade">
+                <div v-if="webauthn_cause" id="webauthn_cause">{{ webauthn_cause }}</div>
+              </transition>
               <div style="text-align: right; margin-top: 12px;">
                 <el-button type="primary" plain size="small" style="width: 110px" @click="gotoWebauthnLogin"
                   :disabled="close" :loading="loading">
@@ -76,11 +79,11 @@
               </div>
               <div class="login-info-wrapper row-mt" style="margin-top: 17px;">
                 <div style="font-size: 12px;">
-                    <span class="color-gray">Powered by
-                      <a target="black" href="https://github.com/MCSManager">MCSManager</a></span>
-                    <br />
-                    <span class="color-gray">Modified by
-                      <a target="black" href="https://studio.friendship.org.cn">Friendship Studio</a></span>
+                  <span class="color-gray">Powered by
+                    <a target="black" href="https://github.com/MCSManager">MCSManager</a></span>
+                  <br />
+                  <span class="color-gray">Modified by
+                    <a target="black" href="https://studio.friendship.org.cn">Friendship Studio</a></span>
                 </div>
               </div>
             </div>
@@ -129,10 +132,14 @@ export default {
         username: "",
         password: ""
       },
+      webauthn: {
+        username: ""
+      },
       close: false,
       closeWindow: false,
       loading: false,
       cause: "",
+      webauthn_cause: "",
       loginInfo: ""
     };
   },
@@ -141,6 +148,17 @@ export default {
       this.login();
     },
     gotoWebauthnLogin() {
+      try {
+        if (!this.webauthn.username) {
+          this.webauthn_cause = this.$t("webauthn.login.isNull");
+          return;
+        }
+        console.log(this.webauthn.username);
+      } catch (error) {
+        this.failed(error);
+      } finally {
+        this.loading = false;
+      }
       router.push({ path: "/webauthn/login" });
     },
     async login() {
@@ -370,6 +388,13 @@ export default {
   color: rgb(170, 8, 8);
   font-size: 12px;
   margin-right: 18px;
+}
+
+#webauthn_cause {
+  color: rgb(170, 8, 8);
+  font-size: 12px;
+  margin-right: 18px;
+  margin-top: 12px;
 }
 
 .fgp {

@@ -82,15 +82,16 @@
     },
     "login": {
       "title": "使用 Friendship Auth 登入",
-      "info":"通过已注册在您账户下的可信安全设备认证登录",
-      "loading":"正在使您登录...",
-      "loadinginfo":"稍后，一个安全窗口将被唤起。请在安全窗口内按要求完成设备认证。"
+      "info": "通过已注册在您账户下的可信安全设备认证登录",
+      "loading": "正在使您登录...",
+      "loadinginfo": "稍后，一个安全窗口将被唤起。请在安全窗口内按要求完成设备认证。",
+      "isNull": "Friendship Auth 账户不能为空值"
     },
-    "error":{
-      "title":"未能成功登录",
-      "info_1":"很遗憾，在尝试使您通过 Friendship Auth 服务登录时遇到了致命错误。",
-      "info_2":"下面的信息可能有助于您排除故障:",
-      "contact":"如果此故障持续出现，请 <a href=\"mailto://me@biduang.cn\" style=\"font-weight:1000\">联系支持人员</a>"
+    "error": {
+      "title": "未能成功登录",
+      "info_1": "很遗憾，在尝试使您通过 Friendship Auth 服务登录时遇到了致命错误。",
+      "info_2": "下面的信息可能有助于您排除故障:",
+      "contact": "如果此故障持续出现，请 <a href=\"mailto://me@biduang.cn\" style=\"font-weight:1000\">联系支持人员</a>"
     }
   },
   "overview": {

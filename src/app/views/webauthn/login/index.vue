@@ -3,11 +3,22 @@
 -->
 
 <template>
-  <div id="login-layer-top" :class="{ 'login-layer-fadeout-top': close, 'login-layer-fadein-top': !close }"></div>
-  <div id="login-layer-left" :class="{ 'login-layer-fadeout-left': close, 'login-layer-fadein-left': !close }"></div>
-  <div id="login-layer-right" :class="{ 'login-layer-fadeout-right': close, 'login-layer-fadein-right': !close }"></div>
-  <div id="login-layer-bottom" :class="{ 'login-layer-fadeout-bottom': close, 'login-layer-fadein-bottom': !close }">
-  </div>
+  <div
+    id="login-layer-top"
+    :class="{ 'login-layer-fadeout-top': close, 'login-layer-fadein-top': !close }"
+  ></div>
+  <div
+    id="login-layer-left"
+    :class="{ 'login-layer-fadeout-left': close, 'login-layer-fadein-left': !close }"
+  ></div>
+  <div
+    id="login-layer-right"
+    :class="{ 'login-layer-fadeout-right': close, 'login-layer-fadein-right': !close }"
+  ></div>
+  <div
+    id="login-layer-bottom"
+    :class="{ 'login-layer-fadeout-bottom': close, 'login-layer-fadein-bottom': !close }"
+  ></div>
 
   <div id="login-panel-wrapper" :class="{ 'login-panel-wrapper-out': closeWindow }">
     <Transition name="slide" mode="out-in" appear>
@@ -37,8 +48,8 @@
               <div class="error-contact">
                 <!-- <span v-html="$t('webauthn.error.contact')">
                 </span> -->
-                <p id="regSuccess" class="success"></p>
-                <p id="regError" class="error"></p>
+                <p id="regSuccess" class="success">{{ successTip }}</p>
+                <p id="regError" class="error">{{ errorTip }}</p>
               </div>
               <div class="error-return">
                 <el-button type="warning" @click="handleReturn">返回登录页面</el-button>
@@ -80,7 +91,7 @@
 
 <script>
 import Panel from "@/components/Panel";
-import SimpleWebAuthnBrowser from '@simplewebauthn/browser';
+import { startRegistration } from "@simplewebauthn/browser";
 // eslint-disable-next-line no-unused-vars
 // import router from "../router";
 export default {
@@ -90,7 +101,9 @@ export default {
       close: false,
       closeWindow: false,
       loading: false,
-      isFailed: false
+      isFailed: false,
+      successTip: "",
+      errorTip: ""
     };
   },
   methods: {
@@ -101,63 +114,52 @@ export default {
     },
     //下面都是幻想时间
     async webauthn() {
-      const {
-        startRegistration
-      } = SimpleWebAuthnBrowser; //目前前端在这一步会似
-
       const username = JSON.parse(sessionStorage.getItem("username"));
       console.log("UserName: ", username); //从上一个页面获得用户名
-
-      const elemSuccess = document.querySelector('#regSuccess');
-      const elemError = document.querySelector('#regError');
-
-      // Reset success/error messages
-      elemSuccess.innerHTML = '';
-      elemError.innerHTML = '';
-
-      const resp = await fetch('/generate-registration-options');
+      const resp = await fetch("/generate-registration-options");
 
       let attResp;
       try {
         const opts = await resp.json();
 
         // Require a resident key for this demo
-        opts.authenticatorSelection.residentKey = 'required';
+        opts.authenticatorSelection.residentKey = "required";
         opts.authenticatorSelection.requireResidentKey = true;
         opts.extensions = {
-          credProps: true,
+          credProps: true
         };
-
         attResp = await startRegistration(opts);
-
       } catch (error) {
-        if (error.name === 'InvalidStateError') {
-          elemError.innerText = 'Error: Authenticator was probably already registered by user';
+        if (error.name === "InvalidStateError") {
+          this.errorTip = "Error: Authenticator was probably already registered by user";
         } else {
-          elemError.innerText = error;
+          this.errorTip = error;
         }
 
         throw error;
       }
 
-      const verificationResp = await fetch('/verify-registration', {
-        method: 'POST',
+      const verificationResp = await fetch("/verify-registration", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(attResp),
+        body: JSON.stringify(attResp)
       });
 
       const verificationJSON = await verificationResp.json();
 
       if (verificationJSON && verificationJSON.verified) {
-        elemSuccess.innerHTML = `Authenticator registered!`;
+        this.successTip = `Authenticator registered!`;
       } else {
-        elemError.innerHTML = `Oh no, something went wrong! Response: <pre>${JSON.stringify(
-          verificationJSON,
-        )}</pre>`;
+        this.errorTip = `Oh no, something went wrong! Response: ${JSON.stringify(
+          verificationJSON
+        )}`;
       }
     }
+  },
+  mounted() {
+    this.webauthn();
   }
 };
 </script>
@@ -337,7 +339,7 @@ export default {
   border-radius: 4px;
 }
 
-.main-wrapper>* {
+.main-wrapper > * {
   margin-bottom: 24px;
 }
 
@@ -394,16 +396,18 @@ export default {
 }
 
 .rainbow {
-  background-image: linear-gradient(to right,
-      orangered,
-      orange,
-      gold,
-      lightgreen,
-      cyan,
-      dodgerblue,
-      mediumpurple,
-      hotpink,
-      orangered);
+  background-image: linear-gradient(
+    to right,
+    orangered,
+    orange,
+    gold,
+    lightgreen,
+    cyan,
+    dodgerblue,
+    mediumpurple,
+    hotpink,
+    orangered
+  );
   background-size: 110vw;
   animation: sliding 30s linear infinite;
   background-clip: text;

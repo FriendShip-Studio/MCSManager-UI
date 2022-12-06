@@ -1,6 +1,5 @@
 <!--
   Copyright (C) 2022 RainChen <asak@irain.cc>
-    I really wanna be RainChen's dog. -- BiDuang  <me@bidang.cn>
 -->
 
 <template>
@@ -36,7 +35,10 @@
               <div class="error-info">{{ $t("webauthn.error.info_2") }}</div>
               <div class="error-detail">错误信息代码</div>
               <div class="error-contact">
-                <span v-html="$t('webauthn.error.contact')"></span>
+                <!-- <span v-html="$t('webauthn.error.contact')">
+                </span> -->
+                <p id="regSuccess" class="success"></p>
+                <p id="regError" class="error"></p>
               </div>
               <div class="error-return">
                 <el-button type="warning" @click="handleReturn">返回登录页面</el-button>
@@ -48,6 +50,9 @@
     </Transition>
     <el-button type="primary" @click="isFailed = !isFailed">
       <span class="rainbow">寄了</span>
+    </el-button>
+    <el-button type="primary" @click="webauthn">
+      <span>看看你的</span>
     </el-button>
   </div>
   <div>
@@ -75,6 +80,7 @@
 
 <script>
 import Panel from "@/components/Panel";
+import SimpleWebAuthnBrowser from '@simplewebauthn/browser';
 // eslint-disable-next-line no-unused-vars
 // import router from "../router";
 export default {
@@ -92,6 +98,65 @@ export default {
       this.close = true;
       this.closeWindow = true;
       this.$router.back();
+    },
+    //下面都是幻想时间
+    async webauthn() {
+      const {
+        startRegistration
+      } = SimpleWebAuthnBrowser; //目前前端在这一步会似
+
+      const username = JSON.parse(sessionStorage.getItem("username"));
+      console.log("UserName: ", username); //从上一个页面获得用户名
+
+      const elemSuccess = document.querySelector('#regSuccess');
+      const elemError = document.querySelector('#regError');
+
+      // Reset success/error messages
+      elemSuccess.innerHTML = '';
+      elemError.innerHTML = '';
+
+      const resp = await fetch('/generate-registration-options');
+
+      let attResp;
+      try {
+        const opts = await resp.json();
+
+        // Require a resident key for this demo
+        opts.authenticatorSelection.residentKey = 'required';
+        opts.authenticatorSelection.requireResidentKey = true;
+        opts.extensions = {
+          credProps: true,
+        };
+
+        attResp = await startRegistration(opts);
+
+      } catch (error) {
+        if (error.name === 'InvalidStateError') {
+          elemError.innerText = 'Error: Authenticator was probably already registered by user';
+        } else {
+          elemError.innerText = error;
+        }
+
+        throw error;
+      }
+
+      const verificationResp = await fetch('/verify-registration', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(attResp),
+      });
+
+      const verificationJSON = await verificationResp.json();
+
+      if (verificationJSON && verificationJSON.verified) {
+        elemSuccess.innerHTML = `Authenticator registered!`;
+      } else {
+        elemError.innerHTML = `Oh no, something went wrong! Response: <pre>${JSON.stringify(
+          verificationJSON,
+        )}</pre>`;
+      }
     }
   }
 };

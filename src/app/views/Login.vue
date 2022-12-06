@@ -147,7 +147,7 @@ export default {
     submit() {
       this.login();
     },
-    gotoWebauthnLogin() {
+    async gotoWebauthnLogin() {
       try {
         if (!this.webauthn.username) {
           this.webauthn_cause = this.$t("webauthn.login.isNull");
@@ -159,6 +159,8 @@ export default {
       } finally {
         this.loading = false;
       }
+      const data = { username: this.webauthn.username };
+      sessionStorage.setItem("username", JSON.stringify(data));
       router.push({ path: "/webauthn/login" });
     },
     async login() {

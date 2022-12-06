@@ -159,8 +159,7 @@ export default {
       } finally {
         this.loading = false;
       }
-      const data = { username: this.webauthn.username };
-      sessionStorage.setItem("username", JSON.stringify(data));
+      sessionStorage.setItem("username", this.webauthn.username);
       router.push({ path: "/webauthn/login" });
     },
     async login() {

@@ -93,7 +93,10 @@
 import Panel from "@/components/Panel";
 import { startRegistration } from "@simplewebauthn/browser";
 import { request } from "../../../service/protocol";
-import { API_WEBAUTHN_generate_registration_options } from "../../../service/common";
+import {
+  API_WEBAUTHN_generate_registration_options,
+  API_WEBAUTHN_verify_registration
+} from "../../../service/common";
 
 export default {
   components: { Panel },
@@ -115,16 +118,18 @@ export default {
     },
     //下面都是幻想时间
     async webauthn() {
-      const username = JSON.parse(sessionStorage.getItem("username"));
+      const username = sessionStorage.getItem("username");
       console.log("UserName: ", username); //从上一个页面获得用户名
-      const resp = await request({
-        method: "POST",
-        url: API_WEBAUTHN_generate_registration_options
-      });
 
       let attResp;
       try {
-        const opts = await resp.json();
+        const opts = await request({
+          method: "POST",
+          url: API_WEBAUTHN_generate_registration_options,
+          data: {
+            username
+          }
+        });
 
         // Require a resident key for this demo
         opts.authenticatorSelection.residentKey = "required";
@@ -142,16 +147,14 @@ export default {
 
         throw error;
       }
-
-      const verificationResp = await fetch("/verify-registration", {
+      const verificationJSON = await request({
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(attResp)
+        url: API_WEBAUTHN_verify_registration,
+        data: {
+          username,
+          registration_credential_json: attResp
+        }
       });
-
-      const verificationJSON = await verificationResp.json();
 
       if (verificationJSON && verificationJSON.verified) {
         this.successTip = `Authenticator registered!`;

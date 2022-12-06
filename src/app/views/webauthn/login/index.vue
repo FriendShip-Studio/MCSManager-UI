@@ -92,8 +92,9 @@
 <script>
 import Panel from "@/components/Panel";
 import { startRegistration } from "@simplewebauthn/browser";
-// eslint-disable-next-line no-unused-vars
-// import router from "../router";
+import { request } from "../../../service/protocol";
+import { API_WEBAUTHN_generate_registration_options } from "../../../service/common";
+
 export default {
   components: { Panel },
   data: function () {
@@ -116,7 +117,10 @@ export default {
     async webauthn() {
       const username = JSON.parse(sessionStorage.getItem("username"));
       console.log("UserName: ", username); //从上一个页面获得用户名
-      const resp = await fetch("/generate-registration-options");
+      const resp = await request({
+        method: "POST",
+        url: API_WEBAUTHN_generate_registration_options
+      });
 
       let attResp;
       try {

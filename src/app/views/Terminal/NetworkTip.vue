@@ -48,8 +48,11 @@
           </p>
           <p>
             状态：
-            <span class="color-gray">未启用</span>
+            <span class="color-gray" v-if="taskInfo.status == 0">未启用</span>
+            <span class="color-green" v-if="taskInfo.status == 1">运行中</span>
+            <span class="color-red" v-if="taskInfo.status == -1">启动错误</span>
           </p>
+          <p>任务 ID: {{ taskInfo.taskId }}</p>
           <p>
             IP 地址：
             <span class="color-green">-</span>
@@ -68,7 +71,12 @@
           </div>
 
           <div style="display: flex; justify-content: space-between">
-            <el-button type="primary" size="small" @click="startHiPer">启用</el-button>
+            <el-button type="primary" size="small" @click="startHiPer" v-if="!isOpen">
+              启用
+            </el-button>
+            <el-button type="danger" size="small" @click="stopHiPer" v-if="isOpen">
+              停止
+            </el-button>
             <el-link
               type="primary"
               :underline="false"
@@ -87,21 +95,43 @@
 <script>
 import Dialog from "@/components/Dialog";
 import SelectBlock from "@/components/SelectBlock";
+import {
+  API_INSTANCE_ASYNC_QUERY,
+  API_INSTANCE_ASYNC_STOP,
+  API_INSTANCE_ASYNC_TASK
+} from "../../service/common";
+import { request } from "../../service/protocol";
 export default {
   components: { Dialog, SelectBlock },
   props: {
     visible: {
       type: Boolean,
       default: false
+    },
+    daemonUuid: {
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
       v: false,
       viewType: 0,
-      indexCode: ""
+      indexCode: "",
+      taskInfo: {
+        status: 0,
+        taskId: "--"
+      },
+      timeTask: null
     };
   },
+
+  computed: {
+    isOpen() {
+      return this.taskInfo.status == 1;
+    }
+  },
+
   watch: {
     visible(n) {
       this.v = n;
@@ -110,7 +140,11 @@ export default {
   },
 
   methods: {
-    init() {},
+    init() {
+      this.timeTask = setInterval(() => {
+        this.queryStatus();
+      }, 2500);
+    },
     show() {
       this.$emit("update:visible", true);
     },
@@ -121,7 +155,67 @@ export default {
     select(type) {
       this.viewType = type;
     },
-    startHiPer() {}
+    async startHiPer() {
+      try {
+        await request({
+          method: "POST",
+          url: API_INSTANCE_ASYNC_TASK,
+          params: {
+            remote_uuid: this.daemonUuid,
+            uuid: "-",
+            task_name: "hiper"
+          },
+          data: {
+            indexCode: this.indexCode
+          }
+        });
+        this.$message({ message: this.$t("general.success"), type: "success" });
+      } catch (error) {
+        this.$message({
+          message: `${this.$t("general.error")}: ${error.message}`,
+          type: "error"
+        });
+      }
+    },
+    async stopHiPer() {
+      try {
+        await request({
+          method: "POST",
+          url: API_INSTANCE_ASYNC_STOP,
+          params: {
+            remote_uuid: this.daemonUuid,
+            uuid: "-",
+            task_name: "hiper"
+          },
+          data: {
+            taskId: this.taskInfo.taskId
+          }
+        });
+        this.$message({ message: this.$t("general.success"), type: "success" });
+      } catch (error) {
+        this.$message({
+          message: `${this.$t("general.error")}: ${error.message}`,
+          type: "error"
+        });
+      }
+    },
+
+    async queryStatus() {
+      const taskInfo = await request({
+        method: "POST",
+        url: API_INSTANCE_ASYNC_QUERY,
+        params: {
+          remote_uuid: this.daemonUuid,
+          uuid: "-",
+          task_name: "hiper"
+        },
+        data: {}
+      });
+
+      if (taskInfo.length > 0) {
+        this.taskInfo = taskInfo[0];
+      }
+    }
   }
 };
 </script>

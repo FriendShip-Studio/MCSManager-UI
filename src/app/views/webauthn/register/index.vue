@@ -73,11 +73,10 @@ import Panel from "@/components/Panel";
 import { sleep } from "@/app/service/common.js";
 import Starter from "./components/Starter.vue";
 import Processing from "./components/Processing.vue";
-import Finish from "./components/Finish.vue";
 // eslint-disable-next-line no-unused-vars
 // import router from "../router";
 export default {
-  components: { Panel, Starter, Processing, Finish },
+  components: { Panel, Starter, Processing},
   data: function () {
     return {
       step: "starter",

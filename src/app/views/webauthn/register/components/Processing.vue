@@ -106,7 +106,8 @@ import { startRegistration } from "@simplewebauthn/browser";
 import { request } from "../../../../service/protocol";
 import {
   API_WEBAUTHN_generate_registration_options,
-  API_WEBAUTHN_verify_registration
+  API_WEBAUTHN_verify_registration,
+sleep
 } from "../../../../service/common";
 
 export default {
@@ -147,6 +148,7 @@ export default {
       const username = sessionStorage.getItem("username");
       console.log("UserName: ", username);
 
+      await sleep(1500);
       let attResp;
       try {
         const opts = await request({

@@ -78,7 +78,20 @@
       "notice-start": "如果您希望以 ",
       "notice-end": " 的身份注册，请继续，我们将为此设备注册 Friendship Auth 服务。",
       "continue": "继续",
-      "return": "不，谢谢"
+      "return": "不，谢谢",
+      "loading": "正在为此设备注册...",
+      "loadinginfo": "稍后，一个安全窗口将被唤起。请在安全窗口内按要求完成设备认证。",
+      "error": {
+        "title": "未能成功注册",
+        "info_1": "很遗憾，在尝试将此设备注册到 Friendship Auth 服务时遇到了致命错误。",
+        "info_2": "下面的信息可能有助于您排除故障:",
+        "contact": "如果此故障持续出现，请 <a href=\"mailto://me@biduang.cn\" style=\"font-weight:1000\">联系支持人员</a>"
+      },
+      "success": {
+        "title": "注册成功",
+        "info": "您已经成功将此安全设备注册到 Friendship Auth 服务。您可以在下次登录时选择无密码方式登录。",
+        "finish": "完成"
+      }
     },
     "login": {
       "title": "使用 Friendship Auth 登入",

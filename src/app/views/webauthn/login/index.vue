@@ -3,62 +3,68 @@
 -->
 
 <template>
-  <div
-    id="login-layer-top"
-    :class="{ 'login-layer-fadeout-top': close, 'login-layer-fadein-top': !close }"
-  ></div>
-  <div
-    id="login-layer-left"
-    :class="{ 'login-layer-fadeout-left': close, 'login-layer-fadein-left': !close }"
-  ></div>
-  <div
-    id="login-layer-right"
-    :class="{ 'login-layer-fadeout-right': close, 'login-layer-fadein-right': !close }"
-  ></div>
-  <div
-    id="login-layer-bottom"
-    :class="{ 'login-layer-fadeout-bottom': close, 'login-layer-fadein-bottom': !close }"
-  ></div>
+  <div id="login-layer-top" :class="{ 'login-layer-fadeout-top': close, 'login-layer-fadein-top': !close }"></div>
+  <div id="login-layer-left" :class="{ 'login-layer-fadeout-left': close, 'login-layer-fadein-left': !close }"></div>
+  <div id="login-layer-right" :class="{ 'login-layer-fadeout-right': close, 'login-layer-fadein-right': !close }"></div>
+  <div id="login-layer-bottom" :class="{ 'login-layer-fadeout-bottom': close, 'login-layer-fadein-bottom': !close }">
+  </div>
 
   <div id="login-panel-wrapper" :class="{ 'login-panel-wrapper-out': closeWindow }">
-    <Transition name="slide" mode="out-in" appear>
-      <Panel id="login-panel" v-loading="loading" body-style="padding: 0;" v-if="!isFailed">
-        <template #default>
-          <div id="body-wrapper">
-            <div id="login-wrapper" class="main-wrapper">
-              <div class="login-title">{{ $t("webauthn.login.loading") }}</div>
-              <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
-              <div class="login-progress">
-                <el-progress :show-text="false" :percentage="100" :indeterminate="true" />
+      <Transition name="slide" mode="out-in" appear>
+        <Panel id="login-panel" v-loading="loading" body-style="padding: 0;" v-if="(!isFailed && !isSuccess)">
+          <template #default>
+            <div id="body-wrapper">
+              <div id="login-wrapper" class="main-wrapper">
+                <div class="login-title">{{ $t("webauthn.login.loading") }}</div>
+                <div class="login-info">{{ $t("webauthn.login.loadinginfo") }}</div>
+                <div class="login-progress">
+                  <el-progress :show-text="false" :percentage="100" :indeterminate="true" />
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-      </Panel>
-      <Panel id="error-panel" v-loading="loading" body-style="padding: 0;" v-else>
-        <template #default>
-          <div id="body-wrapper">
-            <div id="error-wrapper" class="error-wrapper">
-              <i class="el-icon-cirle-close-filled"></i>
-              <div class="error-title">{{ $t("webauthn.error.title") }}</div>
-              <el-divider />
-              <div class="error-info">{{ $t("webauthn.error.info_1") }}</div>
-              <div class="error-info">{{ $t("webauthn.error.info_2") }}</div>
-              <div class="error-detail">错误信息代码</div>
-              <div class="error-contact">
-                <!-- <span v-html="$t('webauthn.error.contact')">
-                </span> -->
-                <p id="regSuccess" class="success">{{ successTip }}</p>
-                <p id="regError" class="error">{{ errorTip }}</p>
-              </div>
-              <div class="error-return">
-                <el-button type="warning" @click="handleReturn">返回登录页面</el-button>
+          </template>
+        </Panel>
+        <Panel id="error-panel" v-loading="loading" body-style="padding: 0;" v-else-if="isFailed">
+          <template #default>
+            <div id="body-wrapper">
+              <div id="error-wrapper" class="error-wrapper">
+                <i class="el-icon-cirle-close-filled"></i>
+                <div class="error-title">{{ $t("webauthn.error.title") }}</div>
+                <el-divider />
+                <div class="error-info">{{ $t("webauthn.error.info_1") }}</div>
+                <div class="error-info">{{ $t("webauthn.error.info_2") }}</div>
+                <div class="error-detail">
+                  <p id="loginError" class="error">{{ errorTip }}</p>
+                </div>
+                <div class="error-contact">
+                  <span v-html="$t('webauthn.error.contact')">
+                  </span>
+                </div>
+                <div class="error-return">
+                  <el-button type="warning" @click="handleReturn">返回</el-button>
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-      </Panel>
-    </Transition>
+          </template>
+        </Panel>
+        <Panel id="success-panel" v-loading="loading" body-style="padding: 0;" v-else-if="isSuccess">
+          <template #default>
+            <div id="success-wrapper">
+              <div id="form-wrapper">
+                <div id="success-title">登录成功</div>
+                <div id="success-info">win</div>
+                <div style="margin-top: 22px">
+                  <div class="register-btn-wrapper row-mt">
+                    <el-button type="primary" size="small" style="width: 110px" :disabled="close" :loading="loading"
+                      @click="handleReturn">返回
+                    </el-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </Panel>
+      </Transition>
     <el-button type="primary" @click="isFailed = !isFailed">
       <span class="rainbow">寄了</span>
     </el-button>
@@ -91,11 +97,11 @@
 
 <script>
 import Panel from "@/components/Panel";
-import { startRegistration } from "@simplewebauthn/browser";
+import { startAuthentication } from "@simplewebauthn/browser";
 import { request } from "../../../service/protocol";
 import {
-  API_WEBAUTHN_generate_registration_options,
-  API_WEBAUTHN_verify_registration
+  API_WEBAUTHN_generate_authentication_options,
+  API_WEBAUTHN_verify_authentication
 } from "../../../service/common";
 
 export default {
@@ -106,8 +112,8 @@ export default {
       closeWindow: false,
       loading: false,
       isFailed: false,
-      successTip: "",
-      errorTip: ""
+      isSuccess:false,
+      errorTip: "未知错误"
     };
   },
   methods: {
@@ -116,52 +122,54 @@ export default {
       this.closeWindow = true;
       this.$router.back();
     },
-    //下面都是幻想时间
     async webauthn() {
       const username = sessionStorage.getItem("username");
-      console.log("UserName: ", username); //从上一个页面获得用户名
+      console.log("UserName: ", username);
 
-      let attResp;
+      let asseResp;
       try {
         const opts = await request({
           method: "POST",
-          url: API_WEBAUTHN_generate_registration_options,
+          url: API_WEBAUTHN_generate_authentication_options,
           data: {
             username
           }
         });
 
         // Require a resident key for this demo
-        opts.authenticatorSelection.residentKey = "required";
-        opts.authenticatorSelection.requireResidentKey = true;
+        /* opts.authenticatorSelection.residentKey = "discouraged";
+        opts.authenticatorSelection.requireResidentKey = false;
         opts.extensions = {
           credProps: true
-        };
-        attResp = await startRegistration(opts);
+        }; */
+        asseResp = await startAuthentication(opts);
       } catch (error) {
-        if (error.name === "InvalidStateError") {
-          this.errorTip = "Error: Authenticator was probably already registered by user";
-        } else {
-          this.errorTip = error;
-        }
+        this.errorTip = error;
+        this.isFailed = !this.isFailed;
 
-        throw error;
+        throw new Error(error);
       }
+
       const verificationJSON = await request({
         method: "POST",
-        url: API_WEBAUTHN_verify_registration,
+        url: API_WEBAUTHN_verify_authentication,
         data: {
           username,
-          registration_credential_json: attResp
+          authentication_credential_json: asseResp
         }
       });
 
+      console.log(verificationJSON);
+      console.log(verificationJSON.verified);
       if (verificationJSON && verificationJSON.verified) {
-        this.successTip = `Authenticator registered!`;
+        console.log("User authenticated!");
+        this.isFailed = false;
+        this.isSuccess = true;
       } else {
         this.errorTip = `Oh no, something went wrong! Response: ${JSON.stringify(
           verificationJSON
         )}`;
+        this.isFailed = !this.isFailed;
       }
     }
   },
@@ -346,7 +354,7 @@ export default {
   border-radius: 4px;
 }
 
-.main-wrapper > * {
+.main-wrapper>* {
   margin-bottom: 24px;
 }
 
@@ -403,18 +411,16 @@ export default {
 }
 
 .rainbow {
-  background-image: linear-gradient(
-    to right,
-    orangered,
-    orange,
-    gold,
-    lightgreen,
-    cyan,
-    dodgerblue,
-    mediumpurple,
-    hotpink,
-    orangered
-  );
+  background-image: linear-gradient(to right,
+      orangered,
+      orange,
+      gold,
+      lightgreen,
+      cyan,
+      dodgerblue,
+      mediumpurple,
+      hotpink,
+      orangered);
   background-size: 110vw;
   animation: sliding 30s linear infinite;
   background-clip: text;

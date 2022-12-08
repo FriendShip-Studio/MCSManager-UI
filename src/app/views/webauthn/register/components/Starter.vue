@@ -3,11 +3,8 @@
     <template #default>
       <div id="register-wrapper">
         <div id="image-wrapper">
-          <el-image
-            style="width: 200px"
-            src="https://cdn.friendship.org.cn/LightPicture/2022/10/a51bb07f4a48dd1d.gif"
-            fit="contain"
-          />
+          <el-image style="width: 200px" src="https://cdn.friendship.org.cn/LightPicture/2022/10/a51bb07f4a48dd1d.gif"
+            fit="contain" />
         </div>
         <div id="form-wrapper">
           <div id="register-title">{{ $t("webauthn.register.title") }}</div>
@@ -20,16 +17,10 @@
           <div style="margin-top: 22px">
             <div class="register-btn-wrapper row-mt">
               <el-link type="primary" @click="handleReturn">{{
-                $t("webauthn.register.return")
+                  $t("webauthn.register.return")
               }}</el-link>
-              <el-button
-                type="primary"
-                size="small"
-                style="width: 110px"
-                :disabled="close"
-                :loading="loading"
-                @click="handleContinue"
-              >
+              <el-button type="primary" size="small" style="width: 110px" :disabled="close" :loading="loading"
+                @click="handleContinue">
                 {{ $t("webauthn.register.continue") }}
               </el-button>
             </div>
@@ -46,11 +37,11 @@ export default {
   props: {
     processStep: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     handleReturn: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     close: {
       type: Boolean,
@@ -58,11 +49,11 @@ export default {
     },
     setContext: {
       type: Function,
-      default: () => {}
+      default: () => { }
     },
     ctx: {
       type: Object,
-      default: () => {}
+      default: () => { }
     }
   },
   data: function () {
@@ -76,6 +67,7 @@ export default {
       //这里发送你的的一个请求，然后调用setContext方法，将请求的结果传递给父组件
       this.setContext({ a: 1 });
       this.processStep("processing");
+      sessionStorage.setItem("username", this.ctx.userName);
       this.loading = false;
     }
   }
@@ -114,7 +106,7 @@ export default {
   font-size: 16px;
 }
 
-#form-wrapper > * {
+#form-wrapper>* {
   margin-bottom: 24px;
 }
 
@@ -130,6 +122,7 @@ export default {
   justify-items: center;
   margin-right: 44px;
 }
+
 @media (max-width: 900px) {
   #register-panel {
     text-align: center;
@@ -165,7 +158,7 @@ export default {
     text-align: center;
   }
 
-  .register-btn-wrapper > * {
+  .register-btn-wrapper>* {
     margin-bottom: 8px;
   }
 

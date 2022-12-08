@@ -32,6 +32,7 @@
     <Processing
       v-if="step == 'processing'"
       :processStep="processStep"
+      :handleReturn="handleReturn"
       :ctx="ctx"
       :setContext="setContext"
       :close="close"
